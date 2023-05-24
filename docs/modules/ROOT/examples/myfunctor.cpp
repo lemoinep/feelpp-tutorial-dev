@@ -22,6 +22,10 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
    */
 // tag::all[]
+
+#include <feel/feel.hpp>
+
+
 #include <feel/feelcore/environment.hpp>
 #include <feel/feelfilters/loadmesh.hpp>
 #include <feel/feeldiscr/pch.hpp>
@@ -30,25 +34,29 @@
 #include <feel/feeldiscr/operatorlagrangep1.hpp>
 #include <feel/feelfilters/exporter.hpp>
 #include <feel/feelvf/function.hpp>
+
+
 using namespace Feel;
 
 namespace Feel {
 // tag::functor[]
-struct Functor
-{
-    static const size_type context = vm::JACOBIAN|vm::POINT;
-    typedef double value_type;
-    typedef Feel::uint16_type uint16_type;
-    static const uint16_type rank = 0;
-    static const uint16_type imorder = 1;
-    static const bool imIsPoly = true;
-    myFunctor( int i ): coord(i){}
-    double operator()( uint16_type a, uint16_type b, ublas::vector<double> const& x, ublas::vector<double> const& n ) const
-        {
-            return xtag::coord[];
-        }
-    int coord = 0;
-};
+// Duplicate function Functor in Feelpp. Rename Functor2
+    struct Functor2
+    {
+        static const size_type context = vm::JACOBIAN|vm::POINT;
+        typedef double value_type;
+        typedef Feel::uint16_type uint16_type;
+        static const uint16_type rank = 0;
+        static const uint16_type imorder = 1;
+        static const bool imIsPoly = true;
+        Functor2( int i ): coord(i){}
+        double operator()( uint16_type a, uint16_type b, ublas::vector<double> const& x, ublas::vector<double> const& n ) const
+            {
+                //return xtag::coord[];
+                return coord;
+            }
+        int coord = 0;
+    };
 // end::functor[]
 }
 
@@ -66,10 +74,9 @@ int main(int argc, char**argv )
     auto Xh= Pch<2>(mesh);
 // end::meshspace[]
 
-
 // tag::elements[]
-    auto u = Xh.element(idf(Functor(0))); // Will contain x
-    auto v = Xh.element(idf(Functor(1))); // Will contain y
+    auto u = Xh->element("x"); // Will contain x
+    auto v = Xh->element("y"); // Will contain y
 // end::elements[]
 
 // tag::exporter[]
@@ -79,5 +86,7 @@ int main(int argc, char**argv )
     ex1->save();
 // end::exporter[]
 }
+
+
 // end::main[]
 // end::all[]
