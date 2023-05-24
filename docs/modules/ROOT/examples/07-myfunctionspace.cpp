@@ -95,23 +95,24 @@ int main( int argc, char** argv )
     double L2uerror = normL2(_range=elements( mesh ), _expr=( idv( u )-g ) );
 
 
-            auto range=elements(mesh); //OK
-            auto expr=idv(u)-g; //OK
-            auto grad_expr=gradv( u )-gradg; //OK
+    auto range=elements(mesh); 
+    auto expr=idv(u)-g; 
+    auto grad_expr=gradv( u )-gradg; 
     
+	/*
     double H1uerror = normH1(_range=range,
                                _expr=expr, 
                                _grad_expr=grad_expr
-                                );
+                                ); //ERROR
             
+    */
 
-/*
 
 
 
   
     Feel::cout << "||u-g||_0 = " << L2uerror/L2g << std::endl;
-    Feel::cout << "||u-g||_1 = " << H1uerror/H1g << std::endl;
+    //Feel::cout << "||u-g||_1 = " << H1uerror/H1g << std::endl;
         // end::interpolant[]
 
     // tag::export[]
@@ -127,7 +128,7 @@ int main( int argc, char** argv )
     e->save();
     // end::export[]
 
-*/
+
 
 }
 // end::all[]
